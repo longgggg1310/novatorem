@@ -49,7 +49,6 @@ def refreshToken():
         REFRESH_TOKEN_URL, data=data, headers=headers).json()
 
     try:
-        print("321312", response["access_token"])
         return response["access_token"]
     except KeyError:
         print(json.dumps(response))
@@ -104,7 +103,7 @@ def gradientGen(albumArtURL, color_count):
 
 def getTemplate():
     try:
-        file = open("templates.json", "r")
+        file = open("api/templates.json", "r")
         templates = json.loads(file.read())
         return templates["templates"][templates["current-theme"]]
     except Exception as e:
