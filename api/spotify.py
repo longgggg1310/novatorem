@@ -26,7 +26,7 @@ FALLBACK_THEME = "spotify.html.j2"
 REFRESH_TOKEN_URL = "https://accounts.spotify.com/api/token"
 NOW_PLAYING_URL = "https://api.spotify.com/v1/me/player/currently-playing"
 RECENTLY_PLAYING_URL = (
-    "https://api.spotify.com/v1/me/player/recently-played?limit=10"
+    "https://api.spotify.com/v1/me/player/currently-playing"
 )
 
 app = Flask(__name__)
@@ -49,6 +49,7 @@ def refreshToken():
         REFRESH_TOKEN_URL, data=data, headers=headers).json()
 
     try:
+        print("321312", response["access_token"])
         return response["access_token"]
     except KeyError:
         print(json.dumps(response))
@@ -103,7 +104,7 @@ def gradientGen(albumArtURL, color_count):
 
 def getTemplate():
     try:
-        file = open("api/templates.json", "r")
+        file = open("templates.json", "r")
         templates = json.loads(file.read())
         return templates["templates"][templates["current-theme"]]
     except Exception as e:
@@ -121,103 +122,30 @@ def makeSVG(data, background_color, border_color):
     barCSS = barGen(barCount)
 
     if not "is_playing" in data:
-        currentStatus = "Recently played:"
-
         #contentBar = "" #Shows/Hides the EQ bar if no song is currently playing
-        item = {
-    'timestamp': 1713514318632,
-    'context': None,
-    'progress_ms': 185702,
-    'item': {
-        'album': {
-            'album_type': 'album',
-            'artists': [{
-                'external_urls': {
-                    'spotify': 'https://open.spotify.com/artist/00FQb4jTyendYWaN8pK0wa'
-                },
-                'href': 'https://api.spotify.com/v1/artists/00FQb4jTyendYWaN8pK0wa',
-                'id': '00FQb4jTyendYWaN8pK0wa',
-                'name': 'Lana Del Rey',
-                'type': 'artist',
-                'uri': 'spotify:artist:00FQb4jTyendYWaN8pK0wa'
-            }],
-            'available_markets': ['AR', 'AU', 'BO', 'BR', 'BG', 'CL', 'CO', 'CR', 'CY', 'CZ', 'DO', 'EC', 'EE', 'SV', 'FI', 'GR', 'GT', 'HN', 'HK', 'HU', 'IS', 'IE', 'LV', 'LT', 'LU', 'MY', 'MT', 'MX', 'NZ', 'NI', 'NO', 'PA', 'PY', 'PE', 'PH', 'PL', 'PT', 'SG', 'SK', 'ES', 'SE', 'TW', 'TR', 'UY', 'GB', 'AD', 'LI', 'MC', 'ID', 'TH', 'VN', 'RO', 'IL', 'ZA', 'SA', 'AE', 'BH', 'QA', 'OM', 'KW', 'EG', 'MA', 'DZ', 'TN', 'LB', 'JO', 'PS', 'IN', 'BY', 'KZ', 'MD', 'UA', 'AL', 'BA', 'HR', 'ME', 'MK', 'RS', 'SI', 'KR', 'BD', 'PK', 'LK', 'GH', 'KE', 'NG', 'TZ', 'UG', 'AG', 'AM', 'BS', 'BB', 'BZ', 'BT', 'BW', 'BF', 'CV', 'DM', 'FJ', 'GM', 'GD', 'GW', 'GY', 'HT', 'JM', 'KI', 'LS', 'LR', 'MW', 'MV', 'ML', 'MH', 'FM', 'NA', 'NR', 'NE', 'PW', 'PG', 'WS', 'ST', 'SN', 'SC', 'SL', 'SB', 'KN', 'LC', 'VC', 'SR', 'TL', 'TO', 'TT', 'TV', 'AZ', 'BN', 'BI', 'KH', 'CM', 'TD', 'KM', 'GQ', 'SZ', 'GA', 'GN', 'KG', 'LA', 'MO', 'MR', 'MN', 'NP', 'RW', 'TG', 'UZ', 'ZW', 'BJ', 'MG', 'MU', 'MZ', 'AO', 'CI', 'DJ', 'ZM', 'CD', 'CG', 'IQ', 'LY', 'TJ', 'VE', 'XK'],
-            'external_urls': {
-                'spotify': 'https://open.spotify.com/album/5VoeRuTrGhTbKelUfwymwu'
-            },
-            'href': 'https://api.spotify.com/v1/albums/5VoeRuTrGhTbKelUfwymwu',
-            'id': '5VoeRuTrGhTbKelUfwymwu',
-            'images': [{
-                    'height': 640,
-                    'url': 'https://i.scdn.co/image/ab67616d0000b273ebc8cfac8b586bc475b04918',
-                    'width': 640
-                },
-                {
-                    'height': 300,
-                    'url': 'https://i.scdn.co/image/ab67616d00001e02ebc8cfac8b586bc475b04918',
-                    'width': 300
-                },
-                {
-                    'height': 64,
-                    'url': 'https://i.scdn.co/image/ab67616d00004851ebc8cfac8b586bc475b04918',
-                    'width': 64
-                }
-            ],
-            'name': 'Born To Die - The Paradise Edition',
-            'release_date': '2012-01-01',
-            'release_date_precision': 'day',
-            'total_tracks': 23,
-            'type': 'album',
-            'uri': 'spotify:album:5VoeRuTrGhTbKelUfwymwu'
-        },
-        'artists': [{
-            'external_urls': {
-                'spotify': 'https://open.spotify.com/artist/00FQb4jTyendYWaN8pK0wa'
-            },
-            'href': 'https://api.spotify.com/v1/artists/00FQb4jTyendYWaN8pK0wa',
-            'id': '00FQb4jTyendYWaN8pK0wa',
-            'name': 'Lana Del Rey',
-            'type': 'artist',
-            'uri': 'spotify:artist:00FQb4jTyendYWaN8pK0wa'
-        }],
-        'available_markets': ['AR', 'AU', 'BO', 'BR', 'BG', 'CL', 'CO', 'CR', 'CY', 'CZ', 'DO', 'EC', 'EE', 'SV', 'FI', 'GR', 'GT', 'HN', 'HK', 'HU', 'IS', 'IE', 'LV', 'LT', 'LU', 'MY', 'MT', 'MX', 'NZ', 'NI', 'NO', 'PA', 'PY', 'PE', 'PH', 'PL', 'PT', 'SG', 'SK', 'ES', 'SE', 'TW', 'TR', 'UY', 'GB', 'AD', 'LI', 'MC', 'ID', 'TH', 'VN', 'RO', 'IL', 'ZA', 'SA', 'AE', 'BH', 'QA', 'OM', 'KW', 'EG', 'MA', 'DZ', 'TN', 'LB', 'JO', 'PS', 'IN', 'BY', 'KZ', 'MD', 'UA', 'AL', 'BA', 'HR', 'ME', 'MK', 'RS', 'SI', 'KR', 'BD', 'PK', 'LK', 'GH', 'KE', 'NG', 'TZ', 'UG', 'AG', 'AM', 'BS', 'BB', 'BZ', 'BT', 'BW', 'BF', 'CV', 'DM', 'FJ', 'GM', 'GD', 'GW', 'GY', 'HT', 'JM', 'KI', 'LS', 'LR', 'MW', 'MV', 'ML', 'MH', 'FM', 'NA', 'NR', 'NE', 'PW', 'PG', 'WS', 'ST', 'SN', 'SC', 'SL', 'SB', 'KN', 'LC', 'VC', 'SR', 'TL', 'TO', 'TT', 'TV', 'AZ', 'BN', 'BI', 'KH', 'CM', 'TD', 'KM', 'GQ', 'SZ', 'GA', 'GN', 'KG', 'LA', 'MO', 'MR', 'MN', 'NP', 'RW', 'TG', 'UZ', 'ZW', 'BJ', 'MG', 'MU', 'MZ', 'AO', 'CI', 'DJ', 'ZM', 'CD', 'CG', 'IQ', 'LY', 'TJ', 'VE', 'XK'],
-        'disc_number': 1,
-        'duration_ms': 265427,
-        'explicit': False,
-        'external_ids': {'isrc': 'GBUM71111565'},
-        'external_urls': {'spotify': 'https://open.spotify.com/track/3BJe4B8zGnqEdQPMvfVjuS'},
-        'href': 'https://api.spotify.com/v1/tracks/3BJe4B8zGnqEdQPMvfVjuS',
-        'id': '3BJe4B8zGnqEdQPMvfVjuS',
-        'is_local': False,
-        'name': 'Summertime Sadness',
-        'popularity': 85,
-        'preview_url': 'https://p.scdn.co/mp3-preview/4634bc7ad33018997a83c20d4fbc34c980205a05?cid=f3f3c037ec1c4314a25db4f8238fd6e7',
-        'track_number': 11,
-        'type': 'track',
-        'uri': 'spotify:track:3BJe4B8zGnqEdQPMvfVjuS'
-    },
-    'currently_playing_type': 'track',
-    'actions': {'disallows': {'resuming': True}},
-    'is_playing': True
-}
-
+        currentStatus = "Recently played:"
+        recentPlays = get(RECENTLY_PLAYING_URL)
+        print('123213', recentPlays)
+        recentPlaysLength = len(recentPlays["items"])
+        print(recentPlaysLength)
+        itemIndex = random.randint(0, recentPlaysLength - 1)
+        item = recentPlays["items"][itemIndex]["track"]
     else:
         item = data["item"]
         currentStatus = "Vibing to:"
-    if item["item"]["album"]["images"] == []:
+    if item["album"]["images"] == []:
         image = PLACEHOLDER_IMAGE
         barPalette = gradientGen(PLACEHOLDER_URL, 4)
         songPalette = gradientGen(PLACEHOLDER_URL, 2)
     else:
-        image = loadImageB64(item["item"]["album"]["images"][0]["url"])
-        barPalette = gradientGen(item["item"]["album"]["images"][0]["url"], 4)
-        songPalette = gradientGen(item["item"]["album"]["images"][0]["url"], 2)
+        image = loadImageB64(item["album"]["images"][1]["url"])
+        barPalette = gradientGen(item["album"]["images"][1]["url"], 4)
+        songPalette = gradientGen(item["album"]["images"][1]["url"], 2)
 
-
-    artistName = item["item"]["artists"][0]["name"].replace("&", "&amp;")
-    songName = item["item"]["name"].replace("&", "&amp;")
-    songURI = item["item"]["external_urls"]["spotify"]
-    artistURI = item["item"]["artists"][0]["external_urls"]["spotify"]
+    artistName = item["artists"][0]["name"].replace("&", "&amp;")
+    songName = item["name"].replace("&", "&amp;")
+    songURI = item["external_urls"]["spotify"]
+    artistURI = item["artists"][0]["external_urls"]["spotify"]
 
 
     dataDict = {
