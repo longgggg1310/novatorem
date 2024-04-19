@@ -26,7 +26,7 @@ FALLBACK_THEME = "spotify.html.j2"
 REFRESH_TOKEN_URL = "https://accounts.spotify.com/api/token"
 NOW_PLAYING_URL = "https://api.spotify.com/v1/me/player/currently-playing"
 RECENTLY_PLAYING_URL = (
-    "https://api.spotify.com/v1/me/player/currently-playing"
+    "https://api.spotify.com/v1/me/player/recently-played?limit=10"
 )
 
 app = Flask(__name__)
@@ -124,7 +124,7 @@ def makeSVG(data, background_color, border_color):
         #contentBar = "" #Shows/Hides the EQ bar if no song is currently playing
         currentStatus = "Recently played:"
         recentPlays = get(RECENTLY_PLAYING_URL)
-        print('123213', recentPlays)
+
         recentPlaysLength = len(recentPlays["items"])
         print(recentPlaysLength)
         itemIndex = random.randint(0, recentPlaysLength - 1)
@@ -132,6 +132,7 @@ def makeSVG(data, background_color, border_color):
     else:
         item = data["item"]
         currentStatus = "Vibing to:"
+    print("222")
     if item["album"]["images"] == []:
         image = PLACEHOLDER_IMAGE
         barPalette = gradientGen(PLACEHOLDER_URL, 4)
